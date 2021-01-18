@@ -1,0 +1,280 @@
+<button class="btn btn-outline-danger btn-sm ml-2" (click)="OturumuKapat()">Oturumu Kapat</button>
+<div class="container mt-5">
+  <div class="accordion" id="accordionExample">
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+            data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            Turnuva Bilgileri
+          </button>
+        </h2>
+      </div>
+      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div class="card-body">
+          <div class="row alert alert-danger" *ngIf="silme">
+            <div class="col-md-12">
+              <p> <b>{{secKayit.odaNo}}</b> Kayıt silinecektir. Onaylıyor musunuz?</p>
+              <button class="btn btn-outline-danger btn-sm" (click)="Sil()">Evet</button>
+              <button class="btn btn-outline-primary btn-sm ml-2" (click)="silme=false;">Hayır</button>
+            </div>
+          </div>
+          <div class="row alert alert-secondary" *ngIf="detay">
+            <div class="col-md-6">
+              <h5>Turnuva Adı</h5>
+              <p>{{secKayit.odaNo}}</p>
+              <h5>Turnuva Yeri</h5>
+              <p>{{secKayit.adSoyad}}</p>
+            </div>
+            <div class="col-md-6">
+              <p><span class="badge badge-pill bg-success text-white" *ngIf="secKayit.islem">Devam Ediyor</span>
+                <span class="badge badge-pill bg-danger text-white" *ngIf="!secKayit.islem">Bitti</span>
+              </p>
+              <button class="btn btn-outline-danger btn-sm" (click)="detay=false;">Kapat</button>
+            </div>
+          </div>
+          <div class="row" *ngIf="ekleduzenle">
+            <div class="col-md-12 alert alert-secondary">
+              <h4>Turnuva Ekle - Düzenle</h4>
+              <form #frm="ngForm" (submit)="Kaydet()">
+                <div class="form-group">
+                  <label>Turnuva Adı</label>
+                  <input type="text" class="form-control" name="odaNo" [(ngModel)]="secKayit.odaNo">
+                </div>
+                <div class="form-group">
+                  <label>Turnuva Yeri</label>
+                  <input class="form-control" name="adSoyad" [(ngModel)]="secKayit.adSoyad">
+                </div>
+
+                <div class="form-group">
+                  <input type="submit" value="Kaydet" class="btn btn-outline-success btn-sm">
+                  <button class="btn btn-outline-danger btn-sm ml-2" (click)="ekleduzenle=false;">Kapat</button>
+                </div>
+              </form>
+              <div [ngClass]="sonuc.islem ? 'alert alert-success':'alert alert-danger'" *ngIf="sonuc.mesaj?.length>0">
+                {{sonuc.mesaj}}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-outline-info btn-sm" (click)="ekleduzenle=true;">Turnuva Ekle</button>
+              <table class="table mt-2">
+                <thead>
+                  <td>Turnuva Adı</td>
+                  <td>Durumu</td>
+                  <td>İşlem</td>
+                  <td>Bilgi</td>
+                  <td>Düzenle</td>
+                  <td>Sil</td>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let kayit  of kayitlar">
+                    <td>{{kayit.odaNo}}</td>
+                    <td>
+                      <span class="badge badge-pill bg-success text-white" *ngIf="kayit.islem">Devam Ediyor</span>
+                      <span class="badge badge-pill bg-danger text-white" *ngIf="!kayit.islem">Bitti</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-outline-success btn-sm" (click)="TamamlaIptal(kayit,true)"
+                        *ngIf="!kayit.islem">Devam Ediyor Yap</button>
+                      <button class="btn btn-outline-danger btn-sm" (click)="TamamlaIptal(kayit,false)"
+                        *ngIf="kayit.islem">Bitti Yap</button>
+                    </td>
+                    <td><button class="btn btn-outline-info btn-sm" (click)="KayitSec(kayit);detay=true;">Bilgi</button>
+                    </td>
+                    <td><button class="btn btn-outline-warning btn-sm"
+                        (click)="KayitSec(kayit);ekleduzenle=true;">Düzenle</button></td>
+                    <td><button class="btn btn-outline-danger btn-sm" (click)="KayitSec(kayit);silme=true;">Sil</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="card">
+      <div class="card-header" id="headingTwo">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
+            data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Turnuva Ödülleri
+          </button>
+        </h2>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+        <div class="card-body">
+          <div class="row alert alert-danger" *ngIf="silme2">
+            <div class="col-md-12">
+              <p> <b>{{secOdul.odul}}</b> İsimli ödül silinecektir. Onaylıyor musunuz?</p>
+              <button class="btn btn-outline-danger btn-sm" (click)="Sil2()">Evet</button>
+              <button class="btn btn-outline-primary btn-sm ml-2" (click)="silme2=false;">Hayır</button>
+            </div>
+          </div>
+          <div class="row alert alert-secondary" *ngIf="detay2">
+            <div class="col-md-6">
+              <h5>Ödüller</h5>
+              <p>{{secOdul.odul}}</p>
+              <h5>Sıralama</h5>
+              <p>{{secOdul.siralama}}</p>
+            </div>
+          </div>
+          <div class="row" *ngIf="ekleduzenle2">
+            <div class="col-md-12 alert alert-secondary">
+              <h4>Ödül Ekle - Düzenle</h4>
+              <form #frm="ngForm" (submit)="Kaydet2()">
+                <div class="form-group">
+                  <label>Ödüller</label>
+                  <input type="text" class="form-control" name="menuNo" [(ngModel)]="secOdul.odul">
+                </div>
+                <div class="form-group">
+                  <label>Sıralama</label>
+                  <input class="form-control" name="aciklama" [(ngModel)]="secOdul.siralama">
+                </div>
+                <div class="form-group">
+                  <input type="submit" value="Ekle" class="btn btn-outline-success btn-sm">
+                  <button class="btn btn-outline-danger btn-sm ml-2" (click)="ekleduzenle2=false;">Kapat</button>
+                </div>
+              </form>
+              <div [ngClass]="sonuc2.islem2 ? 'alert alert-success':'alert alert-danger'"
+                *ngIf="sonuc2.mesaj2?.length>0">
+                {{sonuc2.mesaj2}}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-outline-info btn-sm" (click)="ekleduzenle2=true;">Ödül Ekle</button>
+              <table class="table mt-2">
+                <thead>
+                  <td>Ödül</td>
+                  <td>Bilgi</td>
+                  <td>Sil</td>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let odul  of oduller">
+                    <td>{{odul.odul}}</td>
+                    <td><button class="btn btn-outline-info btn-sm" (click)="OdulSec(odul);detay2=true;">Bilgi</button>
+                    </td>
+                    <td><button class="btn btn-outline-danger btn-sm" (click)="OdulSec(odul);silme2=true;">Sil</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="card">
+      <div class="card-header" id="headingThree">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
+            data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Turnuva Kuralları
+          </button>
+        </h2>
+      </div>
+      <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+        <div class="card-body">
+          <div class="row alert alert-danger" *ngIf="silme3">
+            <div class="col-md-12">
+              <p> <b>{{secKural.kurall}}</b> Kural kaydı silinecektir. Onaylıyor musunuz?</p>
+              <button class="btn btn-outline-danger btn-sm" (click)="Sil3()">Evet</button>
+              <button class="btn btn-outline-primary btn-sm ml-2" (click)="silme3=false;">Hayır</button>
+            </div>
+          </div>
+          <div class="row alert alert-secondary" *ngIf="detay3">
+            <div class="col-md-6">
+              <h5>Katılım Koşulları</h5>
+              <p>{{secKural.kurall}}</p>
+              <h5>Katılım Gereksinimleri</h5>
+              <p>{{secKural.yer}}</p>
+            </div>
+            <div class="col-md-6">
+              <h5>Saati</h5>
+              <p>{{secKural.saat}}</p>
+              <button class="btn btn-outline-danger btn-sm" (click)="detay3=false;">Kapat</button>
+            </div>
+          </div>
+          <div class="row" *ngIf="ekleduzenle3">
+            <div class="col-md-12 alert alert-secondary">
+              <form #frm="ngForm" (submit)="Kaydet3()">
+                <div class="form-group">
+                  <label> Katılım Koşulları</label>
+                  <input type="text" class="form-control" name="kosul" [(ngModel)]="secKural.kurall">
+                </div>
+                <div class="form-group">
+                  <label>Katılım şartları</label>
+                  <input class="form-control" name="..." [(ngModel)]="secKural.yer">
+                </div>
+                <div class="form-group">
+                  <label>İstenilen nitelikler</label>
+                  <input class="form-control" name="....." [(ngModel)]="secKural.saat">
+                </div>
+                <div class="form-group">
+                  <input type="submit" value="Kaydet" class="btn btn-outline-success btn-sm">
+                  <button class="btn btn-outline-danger btn-sm ml-2" (click)="ekleduzenle3=false;">Kapat</button>
+                </div>
+              </form>
+              <div [ngClass]="sonuc3.islem3 ? 'alert alert-success':'alert alert-danger'"
+                *ngIf="sonuc3.mesaj3?.length>0">
+                {{sonuc3.mesaj3}}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-outline-info btn-sm" (click)="ekleduzenle3=true;">Kayıt Ekle</button>
+              <table class="table mt-2">
+                <thead>
+                  <td>Kural Başlıkları</td>
+                  <td>Detay</td>
+                  <td>Sil</td>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let kural of kurallar">
+                    <td>{{kurallar.kurall}}</td>
+                    <td><button class="btn btn-outline-info btn-sm"
+                        (click)="KuralSec(kural);detay3=true;">Detay</button>
+                    </td>
+                    <td><button class="btn btn-outline-danger btn-sm"
+                        (click)="KuralSec(kural);silme3=true;">Sil</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
